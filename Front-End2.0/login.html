@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyWings Airlines - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">✈️</span>
+                <span class="logo-text">SkyWings Airlines</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2 class="login-title">Welcome Back</h2>
+                    <p class="login-subtitle">Sign in to access your account</p>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                        <small class="form-hint">Staff usernames start with 113 (Flight) or 114 (Reservation)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember">
+                            <span>Remember me</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Sign In</button>
+                </form>
+
+                <!-- Demo Credentials -->
+                <div class="demo-info">
+                    <p class="demo-title">Demo Credentials:</p>
+                    <p><strong>Passenger:</strong> passenger123 / pass123</p>
+                    <p><strong>Flight Staff:</strong> 113staff / staff123</p>
+                    <p><strong>Reservation Staff:</strong> 114staff / staff123</p>
+                </div>
+
+                <!-- Sign Up Prompt -->
+                <div class="signup-prompt">
+                    <p>Don't have an account? <a href="#" onclick="openSignupModal(); return false;" class="signup-link">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Signup Type Selection Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content modal-small">
+            <span class="modal-close" onclick="closeSignupModal()">&times;</span>
+            <h3>Choose Account Type</h3>
+            <p class="modal-subtitle">Select the type of account you want to create</p>
+            
+            <div class="signup-type-selection">
+                <button class="signup-type-card" onclick="redirectToSignup('passenger')">
+                    <div class="signup-type-icon">👤</div>
+                    <h4>Passenger Account</h4>
+                    <p>Book flights and manage your travel</p>
+                </button>
+                
+                <button class="signup-type-card" onclick="redirectToSignup('staff')">
+                    <div class="signup-type-icon">👔</div>
+                    <h4>Staff Account</h4>
+                    <p>Join the SkyWings Airlines team</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
