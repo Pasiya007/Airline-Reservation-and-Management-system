@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Management - SkyWings Airlines</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">✈️</span>
+                <span class="logo-text">SkyWings Airlines - Flight Management</span>
+            </div>
+            <div class="nav-user">
+                <span id="staffName">Staff</span>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Flight Management Dashboard</h1>
+            <p>Manage flight operations and schedules</p>
+        </div>
+
+        <!-- Staff Info Cards -->
+        <div class="info-cards-grid">
+            <div class="info-card-item">
+                <div class="info-label">Staff ID</div>
+                <div class="info-value" id="staffId">FS-2024-001</div>
+            </div>
+            <div class="info-card-item">
+                <div class="info-label">Certification Level</div>
+                <div class="info-value" id="certificationLevel">Level 3 Certified</div>
+            </div>
+            <div class="info-card-item">
+                <div class="info-label">Technical Specification</div>
+                <div class="info-value" id="technicalSpec">Boeing 737/787</div>
+            </div>
+            <div class="info-card-item">
+                <div class="info-label">Supervisor</div>
+                <div class="info-value" id="superStaffId">SS-2024-101</div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-cards-grid">
+            <div class="stat-card-item">
+                <div class="stat-icon">✈️</div>
+                <div>
+                    <div class="stat-label">Total Flights</div>
+                    <div class="stat-value" id="totalFlights">0</div>
+                </div>
+            </div>
+            <div class="stat-card-item">
+                <div class="stat-icon">🟢</div>
+                <div>
+                    <div class="stat-label">On Time</div>
+                    <div class="stat-value" id="onTimeFlights">0</div>
+                </div>
+            </div>
+            <div class="stat-card-item">
+                <div class="stat-icon">🔴</div>
+                <div>
+                    <div class="stat-label">Delayed</div>
+                    <div class="stat-value" id="delayedFlights">0</div>
+                </div>
+            </div>
+            <div class="stat-card-item">
+                <div class="stat-icon">⏰</div>
+                <div>
+                    <div class="stat-label">Boarding</div>
+                    <div class="stat-value" id="boardingFlights">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flights Section -->
+        <section class="section-box">
+            <div class="section-header">
+                <h2>✈️ Manage Flights</h2>
+                <button onclick="openFlightModal()" class="btn-primary">+ New Flight</button>
+            </div>
+
+            <div class="search-filter-bar">
+                <input type="text" id="searchFlight" placeholder="Search flights..." onkeyup="searchFlights()">
+                <select id="filterFlightStatus" onchange="filterFlights()">
+                    <option value="">All Status</option>
+                    <option value="on-time">On Time</option>
+                    <option value="delayed">Delayed</option>
+                    <option value="boarding">Boarding</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+                <select id="filterTerminal" onchange="filterFlights()">
+                    <option value="">All Terminals</option>
+                    <option value="T1">Terminal 1</option>
+                    <option value="T2">Terminal 2</option>
+                    <option value="T3">Terminal 3</option>
+                    <option value="T4">Terminal 4</option>
+                    <option value="T5">Terminal 5</option>
+                </select>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Flight Number</th>
+                            <th>Departure Time</th>
+                            <th>Arrival Time</th>
+                            <th>Terminal</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="flightsTable">
+                        <!-- Loaded by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Flight Schedule -->
+        <section class="section-box">
+            <div class="section-header">
+                <h2>📅 Today's Schedule</h2>
+            </div>
+            <div id="scheduleTimeline" class="timeline-container">
+                <!-- Loaded by JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Flight Modal -->
+    <div id="flightModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeFlightModal()">&times;</span>
+            <h3 id="flightModalTitle">New Flight</h3>
+            
+            <form id="flightForm" onsubmit="saveFlight(event)">
+                <input type="hidden" id="flightAction" value="create">
+                <input type="hidden" id="originalFlightNumber">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Flight Number</label>
+                        <input type="text" id="flightNumberInput" placeholder="e.g., SW-101" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Terminal</label>
+                        <select id="terminal" required>
+                            <option value="">Select Terminal</option>
+                            <option value="T1">Terminal 1</option>
+                            <option value="T2">Terminal 2</option>
+                            <option value="T3">Terminal 3</option>
+                            <option value="T4">Terminal 4</option>
+                            <option value="T5">Terminal 5</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Departure Time</label>
+                        <input type="time" id="departureTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Arrival Time</label>
+                        <input type="time" id="arrivalTime" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="flightStatus" required>
+                        <option value="on-time">On Time</option>
+                        <option value="delayed">Delayed</option>
+                        <option value="boarding">Boarding</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" onclick="closeFlightModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
