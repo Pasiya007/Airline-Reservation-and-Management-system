@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Management - SkyWings Airlines</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">✈️</span>
+                <span class="logo-text">SkyWings Airlines - Reservation Management</span>
+            </div>
+            <div class="nav-user">
+                <span id="staffName">Staff</span>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Reservation Management Dashboard</h1>
+            <p>Manage customer reservations and bookings</p>
+        </div>
+
+        <!-- Staff Info Cards -->
+        <div class="info-cards-grid">
+            <div class="info-card-item">
+                <div class="info-label">Staff ID</div>
+                <div class="info-value" id="staffId">RS-2024-001</div>
+            </div>
+            <div class="info-card-item">
+                <div class="info-label">Terminal ID</div>
+                <div class="info-value" id="terminalId">T3</div>
+            </div>
+            <div class="info-card-item">
+                <div class="info-label">Customer Rating</div>
+                <div class="info-value" id="customerRating">4.8/5.0</div>
+            </div>
+            <div class="info-card-item">
+                <div class="info-label">Supervisor</div>
+                <div class="info-value" id="superStaffId">SS-2024-100</div>
+            </div>
+        </div>
+
+        <!-- Reservations Section -->
+        <section class="section-box">
+            <div class="section-header">
+                <h2>📋 Manage Reservations</h2>
+                <button onclick="openReservationModal()" class="btn-primary">+ New Reservation</button>
+            </div>
+
+            <div class="search-filter-bar">
+                <input type="text" id="searchReservation" placeholder="Search reservations..." onkeyup="searchReservations()">
+                <select id="filterStatus" onchange="filterReservations()">
+                    <option value="">All Status</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Reservation ID</th>
+                            <th>Booking Date</th>
+                            <th>Passenger ID</th>
+                            <th>Flight Number</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsTable">
+                        <!-- Loaded by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Customers Section -->
+        <section class="section-box">
+            <div class="section-header">
+                <h2>👥 Manage Customers</h2>
+                <button onclick="openCustomerModal()" class="btn-primary">+ Add Customer</button>
+            </div>
+
+            <div class="search-filter-bar">
+                <input type="text" id="searchCustomer" placeholder="Search customers..." onkeyup="searchCustomers()">
+            </div>
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Passenger ID</th>
+                            <th>NIC</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Baggage Info</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersTable">
+                        <!-- Loaded by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Reservation Modal -->
+    <div id="reservationModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeReservationModal()">&times;</span>
+            <h3 id="reservationModalTitle">New Reservation</h3>
+            
+            <form id="reservationForm" onsubmit="saveReservation(event)">
+                <input type="hidden" id="reservationAction" value="create">
+                <input type="hidden" id="originalReservationId">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Reservation ID</label>
+                        <input type="text" id="reservationId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Booking Date</label>
+                        <input type="date" id="bookingDate" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Passenger ID</label>
+                        <input type="text" id="passengerId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Flight Number</label>
+                        <select id="flightNumber" required>
+                            <option value="">Select Flight</option>
+                            <option value="SW-101">SW-101</option>
+                            <option value="SW-205">SW-205</option>
+                            <option value="SW-312">SW-312</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="reservationStatus" required>
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" onclick="closeReservationModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Customer Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="modal-close" onclick="closeCustomerModal()">&times;</span>
+            <h3 id="customerModalTitle">New Customer</h3>
+            
+            <form id="customerForm" onsubmit="saveCustomer(event)">
+                <input type="hidden" id="customerAction" value="create">
+                <input type="hidden" id="originalPassengerId">
+
+                <h4 class="form-section-title">Personal Information</h4>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Passenger ID</label>
+                        <input type="text" id="customPassengerId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>NIC</label>
+                        <input type="text" id="nic" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="customerName" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="customerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="customerPhone" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="customerPassword" required>
+                </div>
+
+                <h4 class="form-section-title">Baggage Information</h4>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Baggage Allowance (kg)</label>
+                        <input type="number" id="baggage" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Bag Weight (kg)</label>
+                        <input type="number" id="bagWeight" min="0" step="0.1" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Bag Type</label>
+                        <select id="bagType" required>
+                            <option value="Checked">Checked</option>
+                            <option value="Carry-on">Carry-on</option>
+                            <option value="Both">Both</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Bag Status</label>
+                        <select id="bagStatus" required>
+                            <option value="Pending">Pending</option>
+                            <option value="Checked-in">Checked-in</option>
+                            <option value="Loaded">Loaded</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" onclick="closeCustomerModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
